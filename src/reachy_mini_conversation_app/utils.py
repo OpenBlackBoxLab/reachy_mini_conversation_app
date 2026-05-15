@@ -46,6 +46,18 @@ def parse_args() -> tuple[argparse.Namespace, list]:  # type: ignore
         default=None,
         help="[Optional] Robot name to target. Must match the daemon's --robot-name when connecting to a specific robot, mainly useful for development with multiple robots.",
     )
+    parser.add_argument(
+        "--auto-daemon",
+        default=False,
+        action="store_true",
+        help="If no reachy-mini-daemon is running on localhost:8000, start one (--sim) and shut it down on exit.",
+    )
+    parser.add_argument(
+        "--auto-daemon-viewer",
+        default=False,
+        action="store_true",
+        help="When --auto-daemon spawns the daemon, also open the MuJoCo viewer (uses mjpython on macOS). Headless otherwise.",
+    )
     return parser.parse_known_args()
 
 

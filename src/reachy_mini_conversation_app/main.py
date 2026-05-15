@@ -22,6 +22,7 @@ from reachy_mini_conversation_app.utils import (
     initialize_camera_and_vision,
     log_connection_troubleshooting,
 )
+from reachy_mini_conversation_app.daemon_supervisor import ensure_daemon
 
 
 def update_chatbot(chatbot: List[Dict[str, Any]], response: Dict[str, Any]) -> List[Dict[str, Any]]:
@@ -106,6 +107,18 @@ def run(
         logger.warning("Head tracking disabled: --no-camera flag is set. Remove --no-camera to enable head tracking.")
 
     if robot is None:
+        if getattr(args, "auto_daemon", False):
+            try:
+                ensure_daemon(
+                    logger,
+                    viewer=getattr(args, "auto_daemon_viewer", False),
+                    robot_name=args.robot_name,
+                )
+            except RuntimeError as e:
+                logger.error("Auto-daemon failed: %s", e)
+                log_connection_troubleshooting(logger, args.robot_name)
+                sys.exit(1)
+
         try:
             robot_kwargs = {}
             if args.robot_name is not None:

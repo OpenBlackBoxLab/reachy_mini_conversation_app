@@ -189,7 +189,7 @@ reachy-mini-conversation-app
 ```
 
 > [!TIP]
-> Make sure the Reachy Mini daemon is running before launching the app. If you see a `TimeoutError`, it means the daemon isn't started. See [Reachy Mini's SDK](https://github.com/pollen-robotics/reachy_mini/) for setup instructions.
+> Make sure the Reachy Mini daemon is running before launching the app. If you see a `TimeoutError`, it means the daemon isn't started. See [Reachy Mini's SDK](https://github.com/pollen-robotics/reachy_mini/) for setup instructions. Alternatively, pass `--auto-daemon` to have the app start (and later stop) a headless `--sim` daemon for you when none is reachable on `localhost:8000`.
 
 The app runs in console mode by default. Add `--gradio` to launch a web UI at http://127.0.0.1:7860/ (required for simulation mode). Vision and head-tracking options are described in the CLI table below.
 
@@ -202,6 +202,8 @@ The app runs in console mode by default. Add `--gradio` to launch a web UI at ht
 | `--local-vision` | `False` | Use the local vision model (SmolVLM2) for camera-tool requests instead of the selected realtime backend. Requires `local_vision` extra to be installed. |
 | `--gradio` | `False` | Launch the Gradio web UI. Without this flag, runs in console mode. Required when running in simulation mode. |
 | `--robot-name` | `None` | Optional. Connect to a specific robot by name when running multiple daemons on the same subnet. See [Multiple robots on the same subnet](#advanced-features). |
+| `--auto-daemon` | `False` | If no daemon is reachable on `localhost:8000`, spawn `reachy-mini-daemon --sim --headless` as a subprocess and shut it down when the app exits. Convenient for dev iteration. |
+| `--auto-daemon-viewer` | `False` | Used with `--auto-daemon`. Also open the MuJoCo viewer for the spawned daemon (uses `mjpython` on macOS). Headless otherwise. |
 | `--debug` | `False` | Enable verbose logging for troubleshooting. |
 
 ### Examples
@@ -221,6 +223,9 @@ reachy-mini-conversation-app --no-camera
 
 # Launch with Gradio web interface
 reachy-mini-conversation-app --gradio
+
+# Auto-start a headless --sim daemon if none is running (and stop it on exit)
+reachy-mini-conversation-app --auto-daemon
 ```
 
 > [!WARNING]
